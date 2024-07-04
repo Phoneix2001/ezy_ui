@@ -1,8 +1,7 @@
 
 
-import 'package:ezy_ui/model/user_info.dart';
+import 'package:ezy_ui/model/template.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:data_table_2/data_table_2.dart';
 
 // Copyright 2019 The Flutter team. All rights reserved.
@@ -89,7 +88,7 @@ class Dessert {
 class DessertDataSource extends DataTableSource {
 
 
-  DessertDataSource(this.context, this.userData,
+  DessertDataSource(this.context, this.templateData,
       [sortedByCalories = false,
         this.hasRowTaps = false,
         this.hasRowHeightOverrides = false,
@@ -100,7 +99,7 @@ class DessertDataSource extends DataTableSource {
   }
 
   final BuildContext context;
-  final List<UserData> userData;
+  final List<Template> templateData;
   // Add row tap handlers and show snackBar
   bool hasRowTaps = false;
   // Override height values for certain rows
@@ -110,15 +109,15 @@ class DessertDataSource extends DataTableSource {
 
   void sort<T>( bool ascending) {
     if (ascending) {
-      userData.sort((a, b) {
-        final nameA = a.name ?? ''; // Use empty string for null names
-        final nameB = b.name ?? ''; // Use empty string for null names
+      templateData.sort((a, b) {
+        final nameA = a.templateName ?? ''; // Use empty string for null names
+        final nameB = b.templateName ?? ''; // Use empty string for null names
         return nameA.compareTo(nameB);
       });
     }
-    userData.sort((a, b) {
-      final nameA = a.name ?? ''; // Use empty string for null names
-      final nameB = b.name ?? ''; // Use empty string for null names
+    templateData.sort((a, b) {
+      final nameA = a.templateName ?? ''; // Use empty string for null names
+      final nameB = b.templateName ?? ''; // Use empty string for null names
       return nameB.compareTo(nameA);
     });
     notifyListeners();
@@ -126,8 +125,8 @@ class DessertDataSource extends DataTableSource {
 
   void updateSelectedDesserts(RestorableDessertSelections selectedRows) {
     _selectedCount = 0;
-    for (var i = 0; i < userData.length; i += 1) {
-      var dessert = userData[i];
+    for (var i = 0; i < templateData.length; i += 1) {
+      var dessert = templateData[i];
       if (selectedRows.isSelected(i)) {
         dessert.selected = true;
         _selectedCount += 1;
@@ -141,8 +140,8 @@ class DessertDataSource extends DataTableSource {
   @override
   DataRow2 getRow(int index, [Color? color]) {
     assert(index >= 0);
-    if (index >= userData.length) throw 'index > _desserts.length';
-    final userInfo = userData[index];
+    if (index >= templateData.length) throw 'index > _desserts.length';
+    final userInfo = templateData[index];
     return DataRow2.byIndex(
       index: index,
       selected: userInfo.selected,
@@ -160,39 +159,39 @@ class DessertDataSource extends DataTableSource {
         }
       },
       onTap: hasRowTaps
-          ? () => _showSnackbar(context, 'Tapped on row ${userInfo.name}')
+          ? () => _showSnackbar(context, 'Tapped on row ${userInfo.templateName}')
           : null,
       onDoubleTap: hasRowTaps
-          ? () => _showSnackbar(context, 'Double Tapped on row ${userInfo.name}')
+          ? () => _showSnackbar(context, 'Double Tapped on row ${userInfo.templateName}')
           : null,
       onLongPress: hasRowTaps
-          ? () => _showSnackbar(context, 'Long pressed on row ${userInfo.name}')
+          ? () => _showSnackbar(context, 'Long pressed on row ${userInfo.templateName}')
           : null,
       onSecondaryTap: hasRowTaps
-          ? () => _showSnackbar(context, 'Right clicked on row ${userInfo.name}')
+          ? () => _showSnackbar(context, 'Right clicked on row ${userInfo.templateName}')
           : null,
       onSecondaryTapDown: hasRowTaps
           ? (d) =>
-          _showSnackbar(context, 'Right button down on row ${userInfo.name}')
+          _showSnackbar(context, 'Right button down on row ${userInfo.templateName}')
           : null,
       specificRowHeight: 100 ,
       cells: [
-        DataCell(Text(userInfo.name ?? "")),
-        DataCell(Text('${userInfo.phoneNumber ?? ""}'),
+        DataCell(Text(userInfo.templateName ?? "")),
+        DataCell(Text(userInfo.createdAt ?? ""),
             onTap: () => _showSnackbar(context,
-                'Tapped on a cell with "${userInfo.name}"', Colors.red)),
-        DataCell(Text(userInfo.email ?? "")),
-        DataCell(Text('${userInfo.filters}')),
-        DataCell(Text(userInfo.lastResponse.toString())),
-        DataCell(Text('${userInfo.surveys}')),
-        DataCell(Text(userInfo.name ?? "")),
-        DataCell(Text(userInfo.respondentId ?? "")),
+                'Tapped on a cell with "${userInfo.templateName}"', Colors.red)),
+        DataCell(Text(userInfo.updatedAt ?? "")),
+        DataCell(Text('${userInfo.updatedLogs}')),
+        DataCell(Text(userInfo.templateData.toString())),
+        DataCell(Text('${userInfo.templateId}')),
+        const DataCell(Text("--" ?? "")),
+
       ],
     );
   }
 
   @override
-  int get rowCount => userData.length;
+  int get rowCount => templateData.length;
 
   @override
   bool get isRowCountApproximate => false;
@@ -201,10 +200,10 @@ class DessertDataSource extends DataTableSource {
   int get selectedRowCount => _selectedCount;
 
   void selectAll(bool? checked) {
-    for (final dessert in userData) {
+    for (final dessert in templateData) {
       dessert.selected = checked ?? false;
     }
-    _selectedCount = (checked ?? false) ? userData.length : 0;
+    _selectedCount = (checked ?? false) ? templateData.length : 0;
     notifyListeners();
   }
 }

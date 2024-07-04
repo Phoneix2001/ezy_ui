@@ -61,12 +61,16 @@ class Playground extends StatelessWidget {
   void onAccept(DragTargetDetails<CustomComponent> details,
       BuildContext context, CustomWidgetBloc bloc) {
     bloc.add(OnListOfDraggedWidget(
+
         customComponent: ComponentDetailsDataModel(
             id: generateUniqueId,
             color: Theme.of(context).secondaryHeaderColor,
             width: double.infinity,
             height: 100,
             type: details.data,
-        text: TextEditingController(text: "Enter text"))));
+        text: (details.data == CustomComponent.text) ? TextEditingController(text: "Enter text") : null ,
+      columnComponent: ColumnComponent(id: generateUniqueId),
+itemsCount: bloc.state.widgetList.length + 1
+    )));
   }
 }

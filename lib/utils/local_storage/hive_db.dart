@@ -1,9 +1,11 @@
+import 'package:ezy_ui/model/template.dart';
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:hive/hive.dart';
 
 sealed class DataKey {
   static const String box = "AppData12334234foi";
   static const selectedHomeTab = "SelectedHOMETAB";
+  static const templatesKey = "TemplatesKey111";
 }
 
 
@@ -17,6 +19,19 @@ class LocalDB  {
   /// Get Dashboard Tab Selected Value
  static get getSelectedHomeTab {
    return readData(DataKey.box, DataKey.selectedHomeTab);
+  }
+
+  /// Set Dashboard Tab Selected Value
+ static set templatesKey(List<Template>? value) {
+    writeData(templateToJson(value ?? []), DataKey.box, DataKey.templatesKey);
+  }
+  /// Get Dashboard Tab Selected Value
+ static List<Template>? get templatesKey {
+   final data = readData(DataKey.box, DataKey.templatesKey);
+   if (data == null) {
+     return null;
+   }
+   return templateFromJson(data);
   }
 }
 

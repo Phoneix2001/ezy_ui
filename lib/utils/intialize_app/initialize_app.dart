@@ -8,7 +8,7 @@ import '../constants/strings/strings.dart' ;
 
 Future<void> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Strings.initialize();
+ await Strings.initialize();
   await initHive();
 }
 

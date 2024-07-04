@@ -29,10 +29,23 @@ class OnSelectNavigationRail extends CustomWidgetEvent {
  OnSelectNavigationRail({required this.selectedTab});
 }
 
+class CreateNewTemplateEvent extends CustomWidgetEvent {
+  final String templateId;
+final Template? template;
+  CreateNewTemplateEvent( {required this.templateId,this.template});
+}
+
+
 class OnEditExistingModelEvent extends CustomWidgetEvent {
   final double? height;
   final double? width;
   final Color? color;
   final TextEditingController? text;
-  OnEditExistingModelEvent({this.text, this.height, this.width, this.color});
+  final MainAxisAlignment? mainAxisAlignment;
+  final MainAxisSize? mainAxisSize;
+  final CrossAxisAlignment? crossAxisAlignment;
+  final VerticalDirection? verticalDirection;
+  final TextDirection? textDirection;
+  final TextBaseline? textBaseline;
+  OnEditExistingModelEvent( {this.textBaseline,this.textDirection,this.verticalDirection,this.crossAxisAlignment,this.mainAxisSize,this.mainAxisAlignment,this.text, this.height, this.width, this.color});
 }

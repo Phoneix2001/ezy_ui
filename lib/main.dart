@@ -6,6 +6,7 @@ import 'package:ezy_ui/utils/routes/route_config.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toastification/toastification.dart';
 
 import 'bloc/cubit/increment_decrement_cubit.dart';
 
@@ -27,15 +28,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: providers,
-      child: MaterialApp.router(
-        title: 'EZY Ui',
-        scaffoldMessengerKey: snackBarKey,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-            appBarTheme: AppBarTheme(color: Colors.deepPurple.shade200)),
-        routerConfig: router,
+      child: ToastificationWrapper(
+        child: MaterialApp.router(
+          title: 'EZY Ui',
+          scaffoldMessengerKey: snackBarKey,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+              appBarTheme: AppBarTheme(color: Colors.deepPurple.shade200)),
+          routerConfig: router,
+        ),
       ),
     );
   }
