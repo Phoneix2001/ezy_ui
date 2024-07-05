@@ -46,3 +46,7 @@ void hideKeyBoard() {
   //Utils.logD("Hide keyboard", "hideed");
   WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
 }
+
+void printError(Object error, StackTrace stack) {
+  debugPrint("Error => $error \n\nStackTrace=> $stack");
+}

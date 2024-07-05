@@ -65,7 +65,7 @@ class Playground extends StatelessWidget {
         customComponent: ComponentDetailsDataModel(
             id: generateUniqueId,
             color: Theme.of(context).secondaryHeaderColor,
-            width: double.infinity,
+            width: 1000,
             height: 100,
             type: details.data,
         text: (details.data == CustomComponent.text) ? TextEditingController(text: "Enter text") : null ,

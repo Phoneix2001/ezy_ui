@@ -1,4 +1,5 @@
 import 'package:ezy_ui/ui/Info/info.dart';
+import 'package:ezy_ui/ui/Info/widget/json_viewer.dart';
 import 'package:ezy_ui/ui/dashboard/dashboard.dart';
 import 'package:ezy_ui/utils/routes/route_constant.dart';
 import 'package:ezy_ui/utils/routes/scaffold_nav_bar.dart';
@@ -33,5 +34,11 @@ final router = GoRouter(
             }),
       ],
     ),
+    GoRoute(path: RouteConstant.jsonView,
+      name: RouteConstant.jsonViewNamed,
+      builder: (context, state) {
+
+        return JsonViewer(templateName: (state.extra as Map?)?["templateName"],data: (state.extra as Map?)?["rawData"]);
+      },)
   ],
 );

@@ -9,17 +9,18 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.6
-  go_router: any
-  flutter_bloc: any
-  uuid: any
-  flex_color_picker: any
-  url_launcher: any
+  go_router:
+  flutter_bloc:
+  uuid:
+  flex_color_picker:
+  url_launcher:
   hive: any
   hive_flutter: any
   data_table_2: any
   intl: any
   animated_custom_dropdown: any
-  toastification: ^2.0.0
+  toastification: any
+  flutter_json_view: any
 
 dev_dependencies:
   flutter_test:

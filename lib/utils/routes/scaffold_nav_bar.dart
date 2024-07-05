@@ -98,27 +98,30 @@ class ScaffoldWithNavBar extends StatelessWidget {
   }
 
   saveTemplate(CustomWidgetBloc bloc) {
-    final localData = LocalDB.templatesKey;
+    List<Template>? localData = LocalDB.templatesKey;
     // final localItem = localData.contains(element)
+    final now = DateTime.now();
     bool isFound = false;
     for (Template item in localData ?? []) {
       if (item.templateId == bloc.state.selectedTemplateId) {
         isFound = true;
         item = item.copyWith(
-          updatedLogs: [DateTime.now().toString(), ...?item.updatedLogs],
-          updatedAt: DateTime.now().toString(),
+          updatedLogs: [now.toString(), ...?item.updatedLogs],
+          updatedAt: now.toString(),
           templateData: bloc.state.widgetList,
+          rawTemplateData:List<dynamic>.from(bloc.state.widgetList.map((x) => x.toJson()))
         );
       }
     }
     if (!isFound) {
-      localData?.add( Template(
+      localData = [Template(
           templateName: "Template $generateUniqueId",
-          createdAt: DateTime.now().toString(),
+          createdAt: now.toString(),
           templateId: generateUniqueId,
           templateData: bloc.state.widgetList,
-          updatedAt: DateTime.now().toString(),
-          updatedLogs: [DateTime.now().toString()]));
+          rawTemplateData: List<dynamic>.from(bloc.state.widgetList.map((x) => x.toJson())),
+          updatedAt: now.toString(),
+          updatedLogs: [now.toString()]) , ...?localData];
     }
    LocalDB.templatesKey = localData;
 

@@ -57,9 +57,9 @@ int itemsCount;
           height: json["height"]?.toDouble(),
           width: json["width"]?.toDouble(),
           color:Color(json["color"] ?? 0xff00000) ,
-          type: json["type"],
+          type: CustomComponent.column,
           text: TextEditingController(text:json["text"] ?? ""),
-      columnComponent: json["columnComponent"],
+      columnComponent: null,
           itemsCount: json["itemsCount"]);
 
   Map<String, dynamic> toJson() => {
@@ -67,10 +67,10 @@ int itemsCount;
         "height": height,
         "width": width,
         "color": color?.value,
-        "type": type,
+        "type": type.name,
         "text": text?.text,
-    "columnComponent":columnComponent?.toJson(),
-    "itemsCount" : itemsCount
+       "columnComponent": "",
+       "itemsCount" : itemsCount
       };
 }
 
@@ -143,12 +143,12 @@ class ColumnComponent {
         "height": height,
         "width": width,
         "key": key,
-        "mainAxisAlignment": mainAxisAlignment,
-        "mainAxisSize": mainAxisSize,
-        "crossAxisAlignment": crossAxisAlignment,
-        "textDirection": textDirection,
-        "verticalDirection": verticalDirection,
-        "textBaseline": textBaseline,
-        "widgets": widgets
+        "mainAxisAlignment": mainAxisAlignment.name,
+        "mainAxisSize": mainAxisSize.name,
+        "crossAxisAlignment": crossAxisAlignment.name,
+        "textDirection": textDirection?.name,
+        "verticalDirection": verticalDirection.name,
+        "textBaseline": textBaseline?.name,
+        "widgets": widgets.toString()
       };
 }

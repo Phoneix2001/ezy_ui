@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:ezy_ui/model/template.dart';
+import 'package:ezy_ui/utils/custom_funcation.dart';
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:hive/hive.dart';
 
 sealed class DataKey {
   static const String box = "AppData12334234foi";
-  static const selectedHomeTab = "SelectedHOMETAB";
-  static const templatesKey = "TemplatesKey111";
+  static const String selectedHomeTab = "SelectedHOMETAB";
+  static const String templatesKey = "TemplatesKey111";
+  static const String jsonViewDataGlobal = "json39024sdadnfkjfd";
+ static const  String templateNameGlobal ="template2943i092";
 }
 
 
@@ -23,16 +28,42 @@ class LocalDB  {
 
   /// Set Dashboard Tab Selected Value
  static set templatesKey(List<Template>? value) {
-    writeData(templateToJson(value ?? []), DataKey.box, DataKey.templatesKey);
-  }
+   runZonedGuarded(() {
+     // print("template wrote ${templateToJson(value ?? [])}");
+     writeData(templateToJson(value ?? []), DataKey.box, DataKey.templatesKey);
+   },printError);
+ }
+
   /// Get Dashboard Tab Selected Value
  static List<Template>? get templatesKey {
    final data = readData(DataKey.box, DataKey.templatesKey);
    if (data == null) {
      return null;
    }
+  // print(data);
    return templateFromJson(data);
   }
+  static dynamic get rawTemplateData {
+   return readData(DataKey.box, DataKey.templatesKey);
+  }
+
+/* /// Set Dashboard Tab Selected Value
+ static set jsonViewDataGlobal(dynamic value) {
+   writeData(value, DataKey.box, DataKey.jsonViewDataGlobal);
+ }
+ /// Get Dashboard Tab Selected Value
+ static get jsonViewDataGlobal {
+   return readData(DataKey.box, DataKey.jsonViewDataGlobal);
+ }
+
+ /// Set Dashboard Tab Selected Value
+ static set templateNameGlobal(String? value) {
+   writeData(value, DataKey.box, DataKey.templateNameGlobal);
+ }
+ /// Get Dashboard Tab Selected Value
+ static String? get templateNameGlobal {
+   return readData(DataKey.box, DataKey.templateNameGlobal);
+ }*/
 }
 
 

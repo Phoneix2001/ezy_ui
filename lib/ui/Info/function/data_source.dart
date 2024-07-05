@@ -1,8 +1,14 @@
-
+import 'dart:convert';
 
 import 'package:ezy_ui/model/template.dart';
+import 'package:ezy_ui/utils/local_storage/hive_db.dart';
+import 'package:ezy_ui/utils/routes/route_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../bloc/custom_widget/custom_widget_bloc.dart';
 
 // Copyright 2019 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -58,15 +64,15 @@ int _idCounter = 0;
 /// Domain model entity
 class Dessert {
   Dessert(
-      this.name,
-      this.calories,
-      this.fat,
-      this.carbs,
-      this.protein,
-      this.sodium,
-      this.calcium,
-      this.iron,
-      );
+    this.name,
+    this.calories,
+    this.fat,
+    this.carbs,
+    this.protein,
+    this.sodium,
+    this.calcium,
+    this.iron,
+  );
 
   final int id = _idCounter++;
 
@@ -86,13 +92,11 @@ class Dessert {
 /// This class uses static collection of deserts as a data store, projects it into
 /// DataRows, keeps track of selected items, provides sprting capability
 class DessertDataSource extends DataTableSource {
-
-
   DessertDataSource(this.context, this.templateData,
       [sortedByCalories = false,
-        this.hasRowTaps = false,
-        this.hasRowHeightOverrides = false,
-        this.hasZebraStripes = false]) {
+      this.hasRowTaps = false,
+      this.hasRowHeightOverrides = false,
+      this.hasZebraStripes = false]) {
     if (sortedByCalories) {
       sort(true);
     }
@@ -107,7 +111,7 @@ class DessertDataSource extends DataTableSource {
   // Color each Row by index's parity
   bool hasZebraStripes = false;
 
-  void sort<T>( bool ascending) {
+  void sort<T>(bool ascending) {
     if (ascending) {
       templateData.sort((a, b) {
         final nameA = a.templateName ?? ''; // Use empty string for null names
@@ -148,8 +152,8 @@ class DessertDataSource extends DataTableSource {
       color: color != null
           ? WidgetStateProperty.all(color)
           : (hasZebraStripes && index.isEven
-          ? WidgetStateProperty.all(Theme.of(context).highlightColor)
-          : null),
+              ? WidgetStateProperty.all(Theme.of(context).highlightColor)
+              : null),
       onSelectChanged: (value) {
         if (userInfo.selected != value) {
           _selectedCount += value! ? 1 : -1;
@@ -159,33 +163,83 @@ class DessertDataSource extends DataTableSource {
         }
       },
       onTap: hasRowTaps
-          ? () => _showSnackbar(context, 'Tapped on row ${userInfo.templateName}')
+          ? () =>
+              _showSnackbar(context, 'Tapped on row ${userInfo.templateName}')
           : null,
       onDoubleTap: hasRowTaps
-          ? () => _showSnackbar(context, 'Double Tapped on row ${userInfo.templateName}')
+          ? () => _showSnackbar(
+              context, 'Double Tapped on row ${userInfo.templateName}')
           : null,
       onLongPress: hasRowTaps
-          ? () => _showSnackbar(context, 'Long pressed on row ${userInfo.templateName}')
+          ? () => _showSnackbar(
+              context, 'Long pressed on row ${userInfo.templateName}')
           : null,
       onSecondaryTap: hasRowTaps
-          ? () => _showSnackbar(context, 'Right clicked on row ${userInfo.templateName}')
+          ? () => _showSnackbar(
+              context, 'Right clicked on row ${userInfo.templateName}')
           : null,
       onSecondaryTapDown: hasRowTaps
-          ? (d) =>
-          _showSnackbar(context, 'Right button down on row ${userInfo.templateName}')
+          ? (d) => _showSnackbar(
+              context, 'Right button down on row ${userInfo.templateName}')
           : null,
-      specificRowHeight: 100 ,
+      specificRowHeight: 100,
       cells: [
         DataCell(Text(userInfo.templateName ?? "")),
-        DataCell(Text(userInfo.createdAt ?? ""),
-            onTap: () => _showSnackbar(context,
-                'Tapped on a cell with "${userInfo.templateName}"', Colors.red)),
+        DataCell(Text(userInfo.createdAt ?? ""), onTap: () {}),
         DataCell(Text(userInfo.updatedAt ?? "")),
         DataCell(Text('${userInfo.updatedLogs}')),
-        DataCell(Text(userInfo.templateData.toString())),
+        DataCell(
+          Text(
+            userInfo.rawTemplateData.toString(),
+            maxLines: 2,
+            overflow: TextOverflow.clip,
+            style: const TextStyle(
+              color: Colors.blue,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+          onTap: () {
+            context.goNamed(RouteConstant.jsonViewNamed, extra: {
+              "rawData": jsonEncode(userInfo.rawTemplateData),
+              "templateName": userInfo.templateName
+            });
+          },
+        ),
         DataCell(Text('${userInfo.templateId}')),
-        const DataCell(Text("--" ?? "")),
+        DataCell(PopupMenuButton(
+          icon: const Icon(Icons.more_horiz),
+           onSelected: (value) {
+             switch(value) {
+               case 0:
 
+                 break;
+               case 1:
+                 final CustomWidgetBloc bloc = BlocProvider.of<CustomWidgetBloc>(context);
+
+                 final templates =  LocalDB.templatesKey;
+
+                 break;
+               default:
+                 break;
+             }
+           },
+           itemBuilder: (BuildContext context) {
+
+             return <PopupMenuItem<int>>[
+               const PopupMenuItem<int>(
+                 value: 0,
+                 child: Text(
+                   "Edit"
+                 ),
+               ),
+
+               const PopupMenuItem<int>(
+                 value: 1,
+                 child:
+                 Text("Delete"),
+               ),
+             ];    },
+        )),
       ],
     );
   }
@@ -208,11 +262,7 @@ class DessertDataSource extends DataTableSource {
   }
 }
 
-
-
 int _selectedCount = 0;
-
-
 
 _showSnackbar(BuildContext context, String text, [Color? color]) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(

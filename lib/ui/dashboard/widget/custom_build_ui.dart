@@ -65,7 +65,6 @@ class CustomBuildUI extends StatelessWidget {
         if (list.length > 1 ) {
         final  data = list.sublist(index + 1);
         e.columnComponent?.widgets = [...data.map((e) => buildRecursiveUi(context, bloc, [e], index, state, strings))];
-        
         }
         return InkWell(
             onTap: () => onTapContainer(bloc, context, e),
